@@ -1,0 +1,33 @@
+{
+  "name": "peerfund",
+  "version": "1.0.0",
+  "description": "The PeerFund App bridges the gap between borrowers seeking accessible financing options and lenders searching for investment opportunities that offer competitive returns. PeerFund – a pioneering peer-to-peer lending application is set to transform the traditional financial landscape by easing the pace of lending money and raising the returns over small investments. The aim is to revolutionize the way of small investors accessing and providing funds and allowing borrowers to transact in day-to-day life with simple steps.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kavinda90/PeerFund-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kavinda90/PeerFund-api/issues"
+  },
+  "homepage": "https://github.com/kavinda90/PeerFund-api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.6.2",
+    "sequelize": "^6.33.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
