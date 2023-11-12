@@ -61,14 +61,7 @@ const signInUser = async (req, res) => {
         const token = jwt.sign({ id: user.id }, authconfig.JWT_SECRET, {
             expiresIn: authconfig.JWT_REFRESH_EXPIRATION
         });
-        return res.status(200).send({
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
-            api_token: token,
-            dob: user.dob,
-            type: user.user_type
-        });
+        return res.status(200).send({api_token: token, user});
     } catch (err) {
         return res.status(500).send({errors: ['Sign in error']});
     }
