@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Tutorial = sequelize.define("user", {
+    const User = sequelize.define("user", {
         email: {
             type: Sequelize.STRING,
             unique: {
@@ -27,7 +27,10 @@ module.exports = (sequelize, Sequelize) => {
         phone: {
             type: Sequelize.STRING
         },
-        status: Sequelize.BOOLEAN,
+        status: {
+            type: Sequelize.ENUM('active', 'inactive'),
+            defaultValue: 'active'
+        },
         user_type: {
             type: Sequelize.ENUM('admin', 'borrower', 'investor')
         },
@@ -35,7 +38,12 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         payment_method: Sequelize.JSON
+    }, {
+        paranoid: true, // Enable soft deletion
+        timestamps: true // Enable timestamps (createdAt, updatedAt)
     });
+
+    
   
-    return Tutorial;
+    return User;
 };

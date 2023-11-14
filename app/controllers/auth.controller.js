@@ -1,6 +1,6 @@
 const db = require("../models");
 const authconfig = require("../config/auth.config");
-const User = db.users;
+const User = db.user;
 const Op = db.Sequelize.Op;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -8,7 +8,9 @@ const jwt = require('jsonwebtoken');
 //Register User
 const registerUser = async (req, res) => {
     try {
-        const { first_name, last_name, email, dob, password, phone, user_type } = req.body;
+        const { first_name, last_name, email, dob, password, phone, user_type, image_path, payment_method } = req.body;
+
+        console.log("req body ", req.body);
 
         //Check if email exists
         const userExists = await User.findOne({
@@ -28,6 +30,8 @@ const registerUser = async (req, res) => {
             status: true,
             user_type: user_type,
             password: bcrypt.hashSync(password, 15),
+            image_path: image_path,
+            payment_method: payment_method
         };
 
         await User.create(user)

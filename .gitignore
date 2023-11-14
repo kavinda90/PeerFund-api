@@ -6,3 +6,4 @@ apidoc
 .idea/*
 npm-debug.log
 coverage
+.env
