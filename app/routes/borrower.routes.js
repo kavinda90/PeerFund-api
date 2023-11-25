@@ -1,7 +1,9 @@
 module.exports = app => {
+    const {loanRequest} = require("../controllers/borrower.controller");
 
-    var router = require("express").Router();
+    const router = require("express").Router();
 
+    router.post('/new-loan', loanRequest);
 
     app.use('/api/borrower', router);
 }
