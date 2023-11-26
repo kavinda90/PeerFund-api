@@ -1,6 +1,8 @@
 const db = require("../models");
 const User = db.user;
 const LoanRequest = db.loan_request;
+const Investment = db.investment;
+const InvestorAccount = db.investor_account;
 const BorrowerAccount = db.borrower_account;
 const CreditGrade = db.credit_grade;
 const Op = db.Sequelize.Op;
@@ -16,6 +18,33 @@ exports.getActiveLoanRequests = (req, res) => {
         model: BorrowerAccount,
         include: CreditGrade
       }
+    })
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving users."
+        });
+      });
+};
+
+exports.getListOfPortfolio = (req, res) => {
+
+    Investment.findAll({
+        include: [
+            {model: LoanRequest},
+            {
+                model: InvestorAccount,
+                include: {
+                    model: User,
+                    where: {
+                        id: req.params.userId
+                    }
+                }
+            }
+        ]
     })
       .then(data => {
         res.send(data);
