@@ -13,13 +13,7 @@ module.exports = (sequelize, Sequelize) => {
         loan_period: Sequelize.INTEGER,
         payment_term: Sequelize.ENUM('monthly', 'byweekly', 'weekly'),
         status: Sequelize.ENUM('new', 'approved', 'rejected', 'completed'),
-        investment_id: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: sequelize.models.investment,
-                key: 'id'
-            }
-        },
+        investment_id: Sequelize.INTEGER,
         term_amount: Sequelize.DECIMAL(8, 2),
         assesment_fee: Sequelize.DECIMAL(8, 2),
         transaction_info: Sequelize.JSON
@@ -28,6 +22,5 @@ module.exports = (sequelize, Sequelize) => {
         timestamps: true // Enable timestamps (createdAt, updatedAt)
     });
 
-  
     return LoanRequest;
 };
