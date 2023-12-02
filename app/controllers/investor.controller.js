@@ -1,9 +1,12 @@
+const { status } = require("express/lib/response");
 const db = require("../models");
 const User = db.user;
 const LoanRequest = db.loan_request;
 const Investment = db.investment;
 const InvestorAccount = db.investor_account;
 const BorrowerAccount = db.borrower_account;
+const SubscriptionPayment = db.subscription_payment;
+const InvestorWithdrawal = db.investor_withdrawal;
 const CreditGrade = db.credit_grade;
 const Op = db.Sequelize.Op;
 var investorCondition = {user_type: 'investor', status: 'active'};
@@ -13,6 +16,35 @@ exports.getActiveLoanRequests = (req, res) => {
     LoanRequest.findAll({
       where: {
         status: ['new', 'approved', 'completed']
+      },
+      include: [{
+        model: BorrowerAccount,
+        include: CreditGrade
+      }, {
+        model: Investment,
+        where: {
+          investorAccountId: req.params.investorId
+        },
+        required: false
+      }]
+    })
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving users."
+        });
+      });
+};
+
+exports.getLoanRequest = (req, res) => {
+
+    LoanRequest.findAll({
+      where: {
+        status: ['new', 'approved', 'completed'],
+        id: req.id
       },
       include: {
         model: BorrowerAccount,
@@ -56,6 +88,105 @@ exports.getListOfPortfolio = (req, res) => {
         });
       });
 };
+
+exports.getMyAccount = (req, res) => {
+  InvestorAccount.findOne({
+    include: [
+      {
+        model: User,
+        where: {
+          id: req.params.userId
+        }
+      },
+      SubscriptionPayment, InvestorWithdrawal, Investment
+    ]
+  })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving users."
+    });
+  });
+}
+
+exports.submitInvestment = (req, res) => {
+  try {
+    const investData = {
+      interest_rate: parseFloat(req.body.interestRate).toFixed(2),
+      status: 'pending',
+      investorAccountId: req.body.investorId,
+      loanRequestId: req.body.loanId
+    };
+    console.log('dataaa', investData);
+    Investment.create(investData)
+      .then(data => {
+        return res.status(200).send({data, message: 'Investment Submitted Succussfully'});
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while submititng investment."
+        });
+      });
+  } catch (error) {
+    return res.status(500).send(err.message || 'Error in investment submission');
+  }
+  
+}
+
+exports.getInvestedList = (req, res) => {
+  Investment.findAll({
+    where: {
+      investorAccountId: req.params.investorId
+    },
+    include: [
+      InvestorAccount, LoanRequest
+    ]
+  })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving investments."
+    });
+  });
+}
+
+exports.getInvestmentsByInvestor = (req, res) => {
+  Investment.findAll({
+    where: {
+      investorAccountId: req.body.investorId,
+      status: req.body.status
+    },
+    include: [
+      InvestorAccount,
+      {
+        model: LoanRequest,
+        include: {
+          model: BorrowerAccount,
+          include: CreditGrade
+        }
+      }
+    ],
+    order: [
+      ['id', 'DESC']
+    ]
+  })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving investments."
+    });
+  });
+}
 
 // Retrieve all Borrowers from the database.
 exports.findAll = (req, res) => {

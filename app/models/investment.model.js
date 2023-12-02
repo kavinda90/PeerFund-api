@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
     const Investment = sequelize.define("investment", {
         interest_rate: {
-            type: Sequelize.FLOAT(2,2)
+            type: Sequelize.FLOAT
         },
         status: {
             type: Sequelize.ENUM('pending', 'rejected', 'approved', 'paid')

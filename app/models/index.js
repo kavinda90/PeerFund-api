@@ -31,7 +31,7 @@ db.credit_grade = require("./credit_grade.model.js")(sequelize, Sequelize);
 db.investor_withdrawal = require("./investor_withdrawal.model.js")(sequelize, Sequelize);
 db.subscription_payment = require("./subscription_payment.model.js")(sequelize, Sequelize);
 
-//Defining Assciations
+//Defining Associations
 db.user_document.belongsTo(db.user);
 db.user.hasMany(db.user_document);
 
